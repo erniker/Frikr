@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %} Login {% endblock %}
+
+{% block section %}
+
+{% for error in error %}
+    <p>{{ error }}</p>
+{% endfor %}
+
+<form method="post">
+    {% csrf_token %}
+    {{ login_form.as_p }}
+    <div>
+        <button>Entrar</button>
+    </div>
+</form>
+
+{% endblock %}
+
+
+
+
+
+
+<!--
+<div>
+        <input type="text" name="usr" placeholder="Nombre de usuario">
+    </div>
+     <div>
+        <input type="password" name="pwd" placeholder="Password">
+    </div>
+-->
