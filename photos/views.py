@@ -48,11 +48,13 @@ def create(request):
     if request.method == 'GET':
         form = PhotoForm()
     else:
-        form = PhotoForm(request.POST)  # Instanciamos el formulario con los datos del POST
-        if form.is_valid():             # Preguntar si es válido
-            new_photo = form.save()      #Guarda el objeto Photo y me lo devuelve
+        photo_with_owner = Photo()
+        photo_with_owner.owner = request.user                      # asigno como usuario de la foto, el usuario auteticado
+        form = PhotoForm(request.POST, instance=photo_with_owner)  # Instanciamos el formulario con los datos del POST
+        if form.is_valid():                                        # Preguntar si es válido
+            new_photo = form.save()                                # Guarda el objeto Photo y me lo devuelve
             form = PhotoForm()
-            success_message = 'Guardado con éxito! '
+            success_message = 'Guardado con éxito!'
             success_message += '<a href="{0}">'.format(
                 reverse('photo_detail', args=[new_photo.pk])
             )

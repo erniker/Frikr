@@ -6,6 +6,10 @@
 
     <hi>Crear una foto</hi>
 
+     {% if success_message %}
+        <span style="color:green">{{ success_message|safe }}</span>
+    {% endif %}
+
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}

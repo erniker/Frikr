@@ -126,3 +126,9 @@ STATIC_URL = '/static/'
 
 #LOGIN URL
 LOGIN_URL = '/login' #cuando un usuario no está autenticado, le redirige a /login
+
+#LICENSES
+LICENSES = (
+    ('QUE', 'Quentin Tarantino'),
+    ('DSH', 'Dr. Schutlz')
+)
