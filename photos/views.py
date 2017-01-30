@@ -8,6 +8,7 @@ from users.forms import LoginForm
 from django.contrib.auth.decorators import login_required
 from django.views.generic import View
 from django.utils.decorators import method_decorator
+from django.db.models import Q
 
 # Create your views here.
 class HomeView(View):
@@ -85,3 +86,25 @@ class CreateView(View):
             'success_message': success_message
         }
         return render(request, 'photos/new_photo.html', context)
+
+class ListView(View):
+
+    def get(self, request):
+        """
+        Devuelve:
+        - Las fotos públicas si el usuario no está autenticado
+        - Las fotos del usuario autenticado o las públicas de otros
+        - Si el usuario es superadministrador, todas las fotos
+        :param request: HttpRequest
+        :return: HttpResponse
+        """
+        if not request.user.is_authenticated(): # si no está autenticado
+            photos = Photo.objects.filter(visibility=PUBLIC)
+        elif request.user.is_superuser: # si es administrador
+            photos = Photo.objects.all()
+        else:
+            photos = Photo.objects.filter(Q(owner=request.user)| Q(visibility=PUBLIC))
+        context = {
+            'photos': photos
+        }
+        return render(request, 'photos/photos_list.html', context)
