@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """frikr URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -22,6 +23,7 @@ from users import views as users_views
 from photos.views import HomeView, DetailView, CreateView, PhotoListView, UserPhotosView
 from users.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required
+from users.api import UserListAPI
 
 
 urlpatterns = [
@@ -35,5 +37,8 @@ urlpatterns = [
 
     # Users URLs
     url(r'^login$', LoginView.as_view(), name='users_login'),
-    url(r'^logout$', LogoutView.as_view(), name='users_logout')
+    url(r'^logout$', LogoutView.as_view(), name='users_logout'),
+
+    # Users API URLsç
+    url(r'^api/1.0/users/', UserListAPI.as_view(), name='user_list-api')
 ]
