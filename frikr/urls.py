@@ -18,12 +18,10 @@ Including another URLconf
 
 from django.conf.urls import url
 from django.contrib import admin
-from photos import views as photos_views
-from users import views as users_views
 from photos.views import HomeView, DetailView, CreateView, PhotoListView, UserPhotosView
 from users.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required
-from users.api import UserListAPI
+from users.api import UserListAPI, UserDetailAPI
 
 
 urlpatterns = [
@@ -39,6 +37,7 @@ urlpatterns = [
     url(r'^login$', LoginView.as_view(), name='users_login'),
     url(r'^logout$', LogoutView.as_view(), name='users_logout'),
 
-    # Users API URLsç
-    url(r'^api/1.0/users/', UserListAPI.as_view(), name='user_list-api')
+    # Users API URLs
+    url(r'^api/1.0/users/$', UserListAPI.as_view(), name='users_list_api'),
+    url(r'^api/1.0/users/(?P<pk>[0-9]+)$', UserDetailAPI.as_view(), name='users_detail_api')
 ]

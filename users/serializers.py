@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 class UserSerializer(serializers.Serializer):
 
-    Id = serializers.ReadOnlyField()    #read only
+    id = serializers.ReadOnlyField()    #read only
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     username = serializers.CharField()

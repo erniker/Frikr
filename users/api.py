@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from users.serializers import UserSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
 
 class UserListAPI(APIView):
 
@@ -13,4 +14,9 @@ class UserListAPI(APIView):
         serialized_users = serializer.data  #lista de diccionarios
         return Response(serialized_users)
 
+class UserDetailAPI(APIView):
 
+    def get(self, request, pk):
+        user = get_object_or_404(User, pk=pk)
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
