@@ -1,18 +1,18 @@
-# -*- coding: utf-8 -*-
-
+#-*- coding: utf-8 -*-
 from django.contrib.auth.models import User
 from users.serializers import UserSerializer
-from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.shortcuts import get_object_or_404
+from rest_framework.response import Response
 from rest_framework import status
+from django.shortcuts import get_object_or_404
+
 
 class UserListAPI(APIView):
 
     def get(self, request):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
-        serialized_users = serializer.data  #lista de diccionarios
+        serialized_users = serializer.data  # lista de diccionarios
         return Response(serialized_users)
 
     def post(self, request):
@@ -30,3 +30,17 @@ class UserDetailAPI(APIView):
         user = get_object_or_404(User, pk=pk)
         serializer = UserSerializer(user)
         return Response(serializer.data)
+
+    def put(self, request, pk):
+        user = get_object_or_404(User, pk=pk)
+        serializer = UserSerializer(instance=user, data=request.data)
+        if serializer.is_valid():
+            new_user = serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        user = get_object_or_404(User, pk=pk)
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
