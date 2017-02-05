@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 from photos.settings import LICENSES
+from photos.validators import badwords_detector
 
 
 PUBLIC = 'PUB'
@@ -15,12 +16,13 @@ VISIBILITY = (
 )
 
 # Create your models here.
-class Photo(models.Model):
 
+
+class Photo(models.Model):
     owner = models.ForeignKey(User)
     name = models.CharField(max_length=150)
     url = models.URLField()
-    description = models.TextField(blank=True, null=True, default="")
+    description = models.TextField(blank=True, null=True, default="", validators=[badwords_detector])
     create_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
     license = models.CharField(max_length=3, choices=LICENSES)
