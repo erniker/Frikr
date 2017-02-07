@@ -5,6 +5,8 @@ from users.forms import LoginForm
 from django.views.generic import View
 
 # Create your views here.
+
+
 class LoginView(View):
 
     def get(self, request):
@@ -38,6 +40,7 @@ class LoginView(View):
             'login_form': form
         }
         return render(request, 'users/login.html', context)
+
 
 class LogoutView(View):
     def get(self, request):

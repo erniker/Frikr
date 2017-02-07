@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from django.contrib.auth.models import User
 from users.serializers import UserSerializer
 from rest_framework.views import APIView
@@ -6,11 +6,15 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
+from users.permissions import UserPermission
 
 
 class UserListAPI(APIView):
 
+    permission_classes = (UserPermission)
+
     def get(self, request):
+        self.check_permissions(request)
         # instancio paginador
         paginator = PageNumberPagination()
         users = User.objects.all()
@@ -22,6 +26,7 @@ class UserListAPI(APIView):
         return paginator.get_paginated_response(serialized_users)
 
     def post(self, request):
+        self.check_permissions(request)
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             new_user = serializer.save()

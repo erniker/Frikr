@@ -2,6 +2,7 @@
 from photos.settings import BADWORDS
 from django.core.exceptions import ValidationError
 
+
 def badwords_detector(value):
     """
     Valida si en la value se han puesto tacos definidos en settings.BADWORDS

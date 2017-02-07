@@ -23,6 +23,8 @@ class PhotosQueryset(object):
         return photos
 
 # Create your views here.
+
+
 class HomeView(View):
 
     def get(self, request):
@@ -34,6 +36,7 @@ class HomeView(View):
             'photos_list': photos[:5]
         }
         return render(request, 'photos/home.html', context)
+
 
 class DetailView(View, PhotosQueryset):
 
@@ -54,6 +57,7 @@ class DetailView(View, PhotosQueryset):
             return render(request, 'photos/detail.html', context)
         else:
             return HttpResponseNotFound('No existe la foto')  # 404 not found
+
 
 class CreateView(View):
 
@@ -99,6 +103,7 @@ class CreateView(View):
         }
         return render(request, 'photos/new_photo.html', context)
 
+
 class PhotoListView(View, PhotosQueryset):
 
     def get(self, request):
@@ -115,6 +120,7 @@ class PhotoListView(View, PhotosQueryset):
             'photos': self.get_photos_queryset(request)
         }
         return render(request, 'photos/photos_list.html', context)
+
 
 class UserPhotosView(ListView):
     model = Photo
