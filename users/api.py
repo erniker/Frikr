@@ -1,32 +1,29 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.models import User
 from users.serializers import UserSerializer
-from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
 from users.permissions import UserPermission
+from rest_framework.viewsets import GenericViewSet
 
 
-class UserListAPI(APIView):
+class UserViewSet(GenericViewSet):
+    queryset = UserSerializer
+    serializer_class = UserSerializer
+    pagination_class = PageNumberPagination
+    permission_classes = (UserPermission,)
 
-    permission_classes = (UserPermission, )
-
-    def get(self, request):
-        self.check_permissions(request)
-        # instancio paginador
-        paginator = PageNumberPagination()
+    def list(self, request):
         users = User.objects.all()
-        paginator.paginate_queryset(users, request)
+        self.paginate_queryset(users)
         # paginar el queryset
         serializer = UserSerializer(users, many=True)
-        serialized_users = serializer.data  # lista de diccionarios
         # devolver respuesta paginada
-        return paginator.get_paginated_response(serialized_users)
+        return self.get_paginated_response(serializer.data)
 
-    def post(self, request):
-        self.check_permissions(request)
+    def create(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             new_user = serializer.save()
@@ -34,31 +31,23 @@ class UserListAPI(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-class UserDetailAPI(APIView):
-
-    permission_classes = (UserPermission,)
-
-    def get(self, request, pk):
-        self.check_permissions(request)
+    def retrieve(self, request, pk):
         user = get_object_or_404(User, pk=pk)
         self.check_object_permissions(request, user)
         serializer = UserSerializer(user)
         return Response(serializer.data)
 
-    def put(self, request, pk):
-        self.check_permissions(request)
+    def update(self, request, pk):
         user = get_object_or_404(User, pk=pk)
         self.check_object_permissions(request, user)
         serializer = UserSerializer(instance=user, data=request.data)
         if serializer.is_valid():
-            new_user = serializer.save()
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk):
-        self.check_permissions(request)
+    def destroy(self, request, pk):
         user = get_object_or_404(User, pk=pk)
         self.check_object_permissions(request, user)
         user.delete()
