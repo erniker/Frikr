@@ -9,10 +9,9 @@ class UserPermission(BasePermission):
         Define si el usuario autenticado en request.user tiene
         permiso para realizar la acción (GET,POST, PUT, DELETE)
         """
-        from users.api import UserDetailAPI
         # si quiere crear un usuario, sea quien sea, debe poder
         # crearlo
-        if request.method == "POST":
+        if view.action == "Create":
             return True
         # si es superuser, puede hacer lo que quiera
         elif request.user.is_superuser:
@@ -21,7 +20,7 @@ class UserPermission(BasePermission):
         # superuser y la petición va a la vista de detalle, entonces
         # lo permitimos para tomar la decisión en el método
         # has_object_permissions
-        elif isinstance(view, UserDetailAPI):
+        elif view.action in ['retrieve', 'update', 'destroy']:
             return True
         # Si la petición es un GET a listado, no lo permitiremos
         # (porque si llega aquí, el usuario no es superuser y solo
